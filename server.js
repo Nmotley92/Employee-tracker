@@ -376,7 +376,7 @@ function viewEmployeesByDepartment() {
     FROM employees 
     JOIN roles ON employees.role_id = roles.id
     JOIN departments ON roles.department_id = departments.id
-    LEFT JOIN employees manager ON employees.manager_id = manager.id ORDER BY department.name`, (error, results) => {
+    LEFT JOIN employees manager ON employees.manager_id = manager.id ORDER BY departments.id`, (error, results) => {
         error ? console.log(error) : console.table(results);
         start();
     });
