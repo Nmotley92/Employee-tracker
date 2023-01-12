@@ -354,8 +354,14 @@ function updateEmployeeManager() {
 
 function viewEmployeesByManager() {
     // Query the database to display a list of employees sorted by manager_id
-    connection.query('SELECT * FROM employees ORDER BY manager_id ', (error, results) => {
-        error ? error : console.table(results);
+    connection.query(`SELECT employees.id, employees.first_name as 'first name', employees.last_name as 'last name', 
+    roles.title as 'role title', departments.name as department, roles.salary, 
+    CONCAT(manager.first_name, ' ', manager.last_name) as 'manager'
+    FROM employees 
+    JOIN roles ON employees.role_id = roles.id
+    JOIN departments ON roles.department_id = departments.id
+    LEFT JOIN employees manager ON employees.manager_id = manager.id ORDER BY employees.manager_id`, (error, results) => {
+        error ? console.log(error) : console.table(results);
         start();
     });
 
@@ -364,8 +370,14 @@ function viewEmployeesByManager() {
 
 function viewEmployeesByDepartment() {
     // Query the database to display a list of employees grouped by department
-    connection.query('SELECT * FROM employees ORDER BY department_id', (error, results) => {
-        error ? error : console.table(results);
+    connection.query(`SELECT employees.id, employees.first_name as 'first name', employees.last_name as 'last name', 
+    roles.title as 'role title', departments.name as department, roles.salary, 
+    CONCAT(manager.first_name, ' ', manager.last_name) as 'manager'
+    FROM employees 
+    JOIN roles ON employees.role_id = roles.id
+    JOIN departments ON roles.department_id = departments.id
+    LEFT JOIN employees manager ON employees.manager_id = manager.id ORDER BY department.name`, (error, results) => {
+        error ? console.log(error) : console.table(results);
         start();
     });
 }
