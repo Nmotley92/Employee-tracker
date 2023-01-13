@@ -31,11 +31,6 @@ function start() {
                 'Add an employee',
                 'Update an employee role',
                 'Update an employee manager',
-                'View employees by manager',
-                'View employees by department',
-                'Delete a department',
-                'Delete a role',
-                'Delete an employee',
                 'View department budget',
                 'Exit'
             ]
@@ -65,21 +60,6 @@ function start() {
                     break;
                 case 'Update an employee manager':
                     updateEmployeeManager();
-                    break;
-                case 'View employees by manager':
-                    viewEmployeesByManager();
-                    break;
-                case 'View employees by department':
-                    viewEmployeesByDepartment();
-                    break;
-                case 'Delete a department':
-                    deleteDepartment();
-                    break;
-                case 'Delete a role':
-                    deleteRole();
-                    break;
-                case 'Delete an employee':
-                    deleteEmployee();
                     break;
                 case 'View department budget':
                     viewDepartmentBudget();
@@ -132,7 +112,7 @@ function addDepartment() {
         .then(answer => {
             connection.query('INSERT INTO departments SET ?', { name: answer.department }, (error, results) => {
                 error ? console.log(error) : console.log('Department added!');
-                start();
+                viewDepartments();
             });
         });
 }
@@ -172,7 +152,7 @@ function addRole() {
                 const department_id = res[0].id;
                 connection.query('INSERT INTO roles SET ?', { title: answer.title, salary: answer.salary, department_id: department_id }, (error, results) => {
                     error ? console.log(error) : console.log('Role added!');
-                    start();
+                    viewRoles();
                 });
             });
         });
@@ -347,176 +327,11 @@ function updateEmployeeManager() {
 
 }
 
-
-
-
-
-
-function viewEmployeesByManager() {
-    // Query the database to display a list of employees sorted by manager_id
-    connection.query(`SELECT employees.id, employees.first_name as 'first name', employees.last_name as 'last name', 
-    roles.title as 'role title', departments.name as department, roles.salary, 
-    CONCAT(manager.first_name, ' ', manager.last_name) as 'manager'
-    FROM employees 
-    JOIN roles ON employees.role_id = roles.id
-    JOIN departments ON roles.department_id = departments.id
-    LEFT JOIN employees manager ON employees.manager_id = manager.id ORDER BY employees.manager_id`, (error, results) => {
-        error ? console.log(error) : console.table(results);
-        start();
-    });
-
-
-}
-
-function viewEmployeesByDepartment() {
-    // Query the database to display a list of employees grouped by department
-    connection.query(`SELECT employees.id, employees.first_name as 'first name', employees.last_name as 'last name', 
-    roles.title as 'role title', departments.name as department, roles.salary, 
-    CONCAT(manager.first_name, ' ', manager.last_name) as 'manager'
-    FROM employees 
-    JOIN roles ON employees.role_id = roles.id
-    JOIN departments ON roles.department_id = departments.id
-    LEFT JOIN employees manager ON employees.manager_id = manager.id ORDER BY departments.id`, (error, results) => {
-        error ? console.log(error) : console.table(results);
-        start();
-    });
-}
-
-function deleteDepartment() {
-    // Prompt the user for the department to delete and delete it from the database
-    // add prompt to double check if they want to delete the department
-    // query the database to display a list of departments as departments: [ ]
-    // if yes, delete the department
-    // if no, return to the main menu
-    const departments = [];
-    Promise.all([
-        new Promise((resolve, reject) => {
-
-
-            connection.query('SELECT * FROM departments', (error, results) => {
-                if (error) reject(error);
-                results.forEach(department => departments.push(department.name));
-                resolve();
-            });
-        })
-    ]).then(() => {
-        inquirer
-            .prompt([
-                {
-                    name: 'departments',
-                    type: 'list',
-                    message: 'What is the name of the department you would like to delete?',
-                    choices: departments
-                },
-                {
-                    name: 'confirm',
-                    type: 'confirm',
-                    message: 'Are you sure you want to delete this department?'
-                }
-            ])
-            .then(answer => {
-                if (answer.confirm) {
-                    connection.query('DELETE FROM departments WHERE ?', { name: answer.departments }, (error, results) => {
-                        error ? console.log(error) : console.log('Department deleted!');
-                        viewDepartments();
-                    });
-                } else {
-                    start();
-                }
-            });
-    });
-
-    }
-
-function deleteRole() {
-            // Prompt the user for the role to delete and delete it from the database
-            // add prompt to double check if they want to delete the role
-            // query the database to display a list of roles as roles: [ ]
-            // if yes, delete the role
-            // if no, return to the main menu
-            const roles = [];
-            Promise.all([
-                
-                new Promise((resolve, reject) => {
                     
-            connection.query('SELECT * FROM roles', (error, results) => {
-                if (error) reject(error);
-                results.forEach(role => roles.push(role.title));
-                resolve();
-            });
-        })
-    ]).then(() => {
-            inquirer
-                .prompt([
-                    {
-                        name: 'roles',
-                        type: 'list',
-                        message: 'What is the name of the role you would like to delete?',
-                        choices: roles
-                    },
-                    {
-                        name: 'confirm',
-                        type: 'confirm',
-                        message: 'Are you sure you want to delete this role?'
-                    }
-                ])
-                .then(answer => {
-                    if (answer.confirm) {
-                        connection.query('DELETE FROM roles WHERE ?', { title: answer.roles }, (error, results) => {
-                            error ? console.log(error) : console.log('Role deleted!');
-                            viewRoles();
-                        });
-                    } else {
-                        start();
-                    }
-                });
-            });
+                    
 
-        }
-
-function deleteEmployee() {
-            // Prompt the user for the employee to delete and delete it from the database
-            // query the database to display a list of employees as employees: [ ]
-            // add prompt to double check if they want to delete the employee
-            // if yes, delete the employee
-            // if no, return to the main menu
-            const employees = [];
-            Promise.all([
-                new Promise((resolve, reject) => {
-                    connection.query('SELECT * FROM employees', (error, results) => {
-                        if (error) reject(error);
-                        results.forEach(employee => employees.push(employee.first_name));
-                        resolve();
-                    });
-                })
-            ]).then(() => {
-            inquirer
-                .prompt([
-                    {
-                        name: 'employees',
-                        type: 'list',
-                        message: 'Which employee would you like to delete?',
-                        choices: employees
-                    },
-                    {
-                        name: 'confirm',
-                        type: 'confirm',
-                        message: 'Are you sure you want to delete this employee?'
-                    }
-                ])
-                .then(answer => {
-                    if (answer.confirm) {
-                        connection.query('DELETE FROM employees WHERE ?', { first_name: answer.employees }, (error, results) => {
-                            error ? error : console.log('Employee deleted!');
-                            viewEmployees();
-                        });
-                    } else {
-                        start();
-                    }
-                });
-            });
-
-        }
+                
+            
 
 function viewDepartmentBudget() {
             // Query the database to display the total budget for a department
@@ -524,9 +339,15 @@ function viewDepartmentBudget() {
             // prompt user for with department they would like to view the budget for
             // display the total budget for the department
             const departments = [];
-            connection.query('SELECT * FROM departments', (error, results) => {
-                error ? error : results.forEach(department => departments.push(department.name));
+            Promise.all([
+                new Promise((resolve, reject) => {
+                    connection.query('SELECT * FROM departments', (error, results) => {
+                        if (error) reject(error);
+                        results.forEach(department => departments.push(department.name));
+                        resolve();
             });
+        })
+    ]).then(() => {
             inquirer
                 .prompt([
                     {
@@ -537,10 +358,22 @@ function viewDepartmentBudget() {
                     }
                 ])
                 .then(answer => {
-                    connection.query('SELECT SUM(salary) FROM roles WHERE ?', { department_id: answer.department }, (error, results) => {
-                        error ? error : console.log('Total budget for the department: ' + results);
-                        start();
-                    });
-                });
+                    connection.query(
+                        `SELECT SUM(roles.salary) as total_budget FROM roles 
+                         JOIN departments ON departments.name = ? AND roles.department_id = departments.id`,
+                        [answer.departments],
+                        (error, results) => {
+                          if (error) {
+                            console.log(error);
+                          } else {
+                            console.log(`Total budget for department ${answer.departments} is: ${results[0].total_budget}`);
+                            viewEmployees();
+                        
+                          }
+                        });
 
+                });
+            
         }
+    );
+}
