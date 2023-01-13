@@ -19,6 +19,7 @@
 <p align="center">
 	<a href="#about">About</a> •
    	<a href="visuals">Visuals</a> •
+	<a href="installation">Installation</a> • 
    	<a href="#link">Link</a> •
 	<a href="#contact">Contact</a>
     
@@ -26,7 +27,21 @@
 
 ## About
 This was a homeowrk assignment where I learned how to use mysql to create a database and use it to store and retrieve data. I also learned how to use inquirer to create a command line interface to interact with the database. I also learned how to use console.table to display the data in a table format.
+## Installation
+To Install this project
+Clone this repostory to your local machine
+Navigate to the folder in the terminal
+Once in the folder do
 
+```bash
+npm install
+```
+
+## Usage
+To run this project
+```bash
+npm start
+```
 
 ## Visuals
 
