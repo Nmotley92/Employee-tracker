@@ -44,12 +44,12 @@ npm start
 ```
 
 ## Visuals
-
+[demo2.webm](https://user-images.githubusercontent.com/114119193/212237648-b081208f-62ec-4fc6-89ed-f0f167d7625f.webm)
 
 
 
 ## link
-:link: 
+:link: https://drive.google.com/file/d/1tFfAftWaMN_Yc_IUA29NO3xi8PgdmyZP/view?usp=sharing
 
 
 
