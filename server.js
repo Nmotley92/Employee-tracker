@@ -435,9 +435,17 @@ function deleteRole() {
             // if yes, delete the role
             // if no, return to the main menu
             const roles = [];
+            Promise.all([
+                
+                new Promise((resolve, reject) => {
+                    
             connection.query('SELECT * FROM roles', (error, results) => {
-                error ? error : results.forEach(role => roles.push(role.title));
+                if (error) reject(error);
+                results.forEach(role => roles.push(role.title));
+                resolve();
             });
+        })
+    ]).then(() => {
             inquirer
                 .prompt([
                     {
@@ -454,14 +462,16 @@ function deleteRole() {
                 ])
                 .then(answer => {
                     if (answer.confirm) {
-                        connection.query('DELETE FROM roles WHERE ?', { title: answer.role }, (error, results) => {
-                            error ? error : console.log('Role deleted!');
-                            start();
+                        connection.query('DELETE FROM roles WHERE ?', { title: answer.roles }, (error, results) => {
+                            error ? console.log(error) : console.log('Role deleted!');
+                            viewRoles();
                         });
                     } else {
                         start();
                     }
                 });
+            });
+
         }
 
 function deleteEmployee() {
@@ -471,9 +481,15 @@ function deleteEmployee() {
             // if yes, delete the employee
             // if no, return to the main menu
             const employees = [];
-            connection.query('SELECT * FROM employees', (error, results) => {
-                error ? error : results.forEach(employee => employees.push(employee.first_name));
-            });
+            Promise.all([
+                new Promise((resolve, reject) => {
+                    connection.query('SELECT * FROM employees', (error, results) => {
+                        if (error) reject(error);
+                        results.forEach(employee => employees.push(employee.first_name));
+                        resolve();
+                    });
+                })
+            ]).then(() => {
             inquirer
                 .prompt([
                     {
@@ -490,14 +506,16 @@ function deleteEmployee() {
                 ])
                 .then(answer => {
                     if (answer.confirm) {
-                        connection.query('DELETE FROM employees WHERE ?', { first_name: answer.employee }, (error, results) => {
+                        connection.query('DELETE FROM employees WHERE ?', { first_name: answer.employees }, (error, results) => {
                             error ? error : console.log('Employee deleted!');
-                            start();
+                            viewEmployees();
                         });
                     } else {
                         start();
                     }
                 });
+            });
+
         }
 
 function viewDepartmentBudget() {
