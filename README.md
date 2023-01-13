@@ -18,8 +18,8 @@
 
 <p align="center">
 	<a href="#about">About</a> •
-   	<a href="visuals">Visuals</a> •
-	<a href="installation">Installation</a> • 
+   	<a href="#visuals">Visuals</a> •
+	<a href="#installation">Installation</a> • 
    	<a href="#link">Link</a> •
 	<a href="#contact">Contact</a>
     
