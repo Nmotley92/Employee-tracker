@@ -3,7 +3,7 @@
 </h1>
 
 <h3 align="center">
-	This project allows users track theier employees.
+	This project allows users track their employees.
 </h3>
 
 <p align="center">
